@@ -84,17 +84,18 @@ Formula <- Type~refractive+sodium+Magnesium+Aluminum+Silicon+Potassium+Calcium+B
 traindata$Type %<>% as.numeric() %>% -1 %<>% as.factor()
 glassX <- build.x(Formula,data = traindata,contrasts = F)
 glassY <- build.y(Formula,data = traindata) 
-num_class <- 7
+num_class <- 7 
 # xgboost
 library(xgboost)
+# xgboost 參數設定 (xgboost parameters setup)
+param = list("objective" = "multi:softmax", # 訓練目標
+             "eval_metric" = "merror",      # 多分類錯分率 (多分類對數損失用mlogloss)
+             "num_class" = num_class
+)
 glassboost <- xgboost(data = glassX,
                       label = glassY,
-                      max.depth = 3,
-                      eta = 0.3,
-                      nthread = 4,
                       nrounds = 20,
-                      objective = "multi:softprob",
-                      num_class = num_class)
+                      params = param)
 glassboost
 xgb.plot.multi.trees(glassboost,feature_names = colnames(glassX))
 # 重要變數
