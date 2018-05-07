@@ -1,7 +1,8 @@
-glass <- read.csv("~/Desktop/多變量mid/Glass_data.csv")
+library(readr)
+glass <- read_csv("Glass_data.csv")
 head(glass)
 set.seed(15) # 3 + 12
-tmp <- sample(c(1:length(glass[,1])), 100, replace = F)
+tmp <- sample(1:114, 100, replace = F)
 glass_train <- glass[tmp,]
 glass_test <- glass[-tmp,]
 
@@ -28,10 +29,11 @@ text(glass.prunetree)
 prp(glass.prunetree,         # 模型
     faclen=0,           # 呈現的變數不要縮寫
     fallen.leaves=TRUE, # 讓樹枝以垂直方式呈現
-    shadow.col="gray",  # 最下面的節點塗上陰影
+    shadow.col="gray",
+    extra=2)# 最下面的節點塗上陰影
     # number of correct classifications / number of observations in that node
 # 看是否有相關係數>0.7的部分
-cor(glass_train)
+cor(glass_train[,-10])
 
 newglass.treenew<-rpart(Type~., data=glass_train,method="class",parms=list(split="information"),control=glass.control) 
 printcp(newglass.treenew)
@@ -56,7 +58,7 @@ for( i in 1:length(glass_test[,1])){
 temp[i] <- which(newtest.tpred[i,] == max(newtest.tpred[i,]))}
 
 # True error rate
-1 - sum(temp == glass_test$Type)/length(glass_test[,1])
+1 - sum(temp == glass_test$Type)/100
 
 
 # Linear Discriminant Analysis --------------------------------------------
