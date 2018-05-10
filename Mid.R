@@ -16,7 +16,13 @@ library(stats)
 pca.job<-princomp(scale(job,scale=TRUE,center=TRUE),cor=T ) 
 pca.job
 # 選擇相關係數矩陣可以把變異程度差距太大的影響消掉
-summary(pca.job) 
+summary(pca.job)
+vars <- pca.job$sdev^2
+props <- vars / sum(vars)    
+cumulative.props <- cumsum(props)  # 累加前n個元素的值
+cumulative.props
+plot(cumulative.props,ylab = "cum.variance", xlab = "components")
+abline(h=0.7, col="blue") 
 loadings(pca.job)
 print(pca.job$loadings,digits = 4, cutoff = 0) # 顯示空格的資料
 
